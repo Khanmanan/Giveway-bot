@@ -1,92 +1,22 @@
-const { MessageEmbed } = require("discord.js");
-
+const Discord = require("discord.js")
 module.exports = {
-
-  name: "help", 
-
-  description:
-
-    "Get list of all command and even get to know every command detials",
-
-  usage: "help <cmd>",
-
+  name: "help",
+  aliases: ["halp"],
   category: "info",
-
+  clientPerms: ["EMBED_LINKS"],
   run: async (client, message, args) => {
+    const embed = new Discord.MessageEmbed()
+    .setTitle("Help Center")
+    .setDescription("**EXAMPLE g?start <channel> <duration> <winners> <prize>  |  g?end <msgid> | g?reroll <msgid> **")
+    .setThumbnail(client.user.displayAvatarURL({ format: "png" }))
+      .addField(`🎉GIVEWAY🎉`, '`START` | `END` | `REROLL` ')
+      .addField(`❓Information❓`, '`HELP` | `BOTINFO`')
+    
+           
 
-    if (args[0]) {
-
-      const command = await client.commands.get(args[0]);
-
-      if (!command) {
-
-        return message.channel.send("Unknown Command: " + args[0]);
-
-      }
-
-      let embed = new MessageEmbed()
-
-        .setAuthor(command.name, client.user.displayAvatarURL())
-
-        .addField("Description", command.description || "Not Provided :(")
-
-        .addField("Usage", "`" + command.usage + "`" || "Not Provied")
-
-        .setThumbnail(client.user.displayAvatarURL())
-
-        .setColor("GREEN")
-
-        .setFooter(client.user.username, client.user.displayAvatarURL());
-
-      return message.channel.send(embed);
-
-    } else {
-
-      const commands = await client.commands;
-
-      let emx = new MessageEmbed()
-
-        .setDescription("**[Join my support server](https://dsc.gg/kmdevs )**.  | **[WEBSITE ](https://automodbot.tk)** ")
-
-        .setColor("GREEN")
-
-        .setFooter(client.user.username, client.user.displayAvatarURL())
-
-        .setThumbnail(client.user.displayAvatarURL());
-
-      let com = {};
-
-      for (let comm of commands.array()) {
-
-        let category = comm.category || "Unknown";
-
-        let name = comm.name;
-
-        if (!com[category]) {
-
-          com[category] = [];
-
-        }
-
-        com[category].push(name);
-
-      }
-
-      for(const [key, value] of Object.entries(com)) {
-
-        let category = key;
-
-        let desc = "`" + value.join("`, `") + "`";
-
-        emx.addField(`${category.toUpperCase()}[${value.length}]`, desc);
-
-      }
-
-      return message.channel.send(emx);
-
-    }
-
+    .setColor("RANDOM")
+    .setTimestamp()
+    .setFooter(`Made by khan manan #9006`, client.user.displayAvatarURL({ format: "png" }))
+    message.channel.send(embed)
   }
-
-};
-
+}

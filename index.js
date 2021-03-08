@@ -8,7 +8,7 @@ const client = new discord.Client({
 
   
 
-  disableEveryone: true 
+  disableEveryone: false
 
 });
 
@@ -52,13 +52,40 @@ client.giveawaysManager = manager;
 
 client.on("ready", () => {
 
-    client.user.setActivity(`g?help|made by cw khan |Servers Count - ${client.guilds.cache.size}`, { type: "WATCHING"})
+    client.user.setActivity(`g?help |Servers Count - ${client.guilds.cache.size}`, { type: "WATCHING"})
 
 })
-
 console.log("bot is ready to giveway please subscribe Cw khan channel and join support server https://dsc.gg/kmdevs")
 
- 
+ client.on("message", async message => {
+  const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
+  if (message.content.match(prefixMention)) {
+    return message.reply(`My prefix is \`${default_prefix}\``);
+  }
+
+  if (message.author.bot) return;
+  if (!message.guild) return;
+  if (!message.content.startsWith(default_prefix)) return;
+
+  if (!message.member)
+    message.member = await message.guild.fetchMember(message);
+
+  const args = message.content
+    .slice(default_prefix.length)
+    .trim()
+    .split(/ +/g);
+  const cmd = args.shift().toLowerCase();
+
+  if (cmd.length === 0) return;
+
+  let command = client.commands.get(cmd);
+
+  if (!command) command = client.commands.get(client.aliases.get(cmd));
+
+  if (command) command.run(client, message, args);
+});
+require('http').createServer((req, res) => res.end('Bot is alive!')).listen(3000)
+
 
 client.login(token);
 
